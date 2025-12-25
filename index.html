@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veo 3.1 Video Generator</title>
+<style>
+  body { font-family: sans-serif; background: #121212; color: #eee; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+  input, textarea { width: 100%; max-width: 400px; margin: 10px 0; padding: 8px; border-radius: 4px; border: 1px solid #555; background: #222; color: #eee; }
+  button { padding: 10px 20px; margin-top: 10px; border: none; border-radius: 5px; background: #1e90ff; color: #fff; cursor: pointer; }
+  button:hover { background: #559fff; }
+  #output { margin-top: 20px; max-width: 400px; word-wrap: break-word; background: #222; padding: 10px; border-radius: 5px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+
+<h1>Veo 3.1 Video Generator</h1>
+
+<label>Prompt:</label>
+<textarea id="prompt" rows="3" placeholder="Describe the video..."></textarea>
+
+<label>Image URLs (comma separated, optional):</label>
+<input type="text" id="images" placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg">
+
+<label>Aspect Ratio:</label>
+<select id="aspectRatio">
+  <option value="16:9" selected>16:9</option>
+  <option value="9:16">9:16</option>
+</select>
+
+<button id="generateBtn">Generate Video</button>
+
+<div id="output">Job info will appear here...</div>
+
+<script src="Veo.js"></script>
+<script>
+document.getElementById('generateBtn').addEventListener('click', async () => {
+  const output = document.getElementById('output');
+  output.textContent = 'Generating...';
+
+  const prompt = document.getElementById('prompt').value || 'A dog playing in a park';
+  const images = document.getElementById('images').value.split(',').map(u => u.trim()).filter(Boolean);
+  const aspectRatio = document.getElementById('aspectRatio').value;
+
+  try {
+    const data = await generateVeoVideo(prompt, images, aspectRatio, [12345]);
+    output.textContent = JSON.stringify(data, null, 2);
+  } catch (err) {
+    output.textContent = 'Error: ' + err.message;
+  }
+});
+</script>
+
+</body>
+</html>
